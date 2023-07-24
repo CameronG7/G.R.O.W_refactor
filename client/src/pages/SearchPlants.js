@@ -105,7 +105,7 @@ const SearchPlants = () => {
     <>
       <div
         style={{
-          minHeight: "100vh", // Set the minimum height to fill the whole viewport
+         
           display: "flex",
           flexDirection: "column",
         }}
