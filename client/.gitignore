@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-/books
+books
 # production
 /build
 package-lock.json
