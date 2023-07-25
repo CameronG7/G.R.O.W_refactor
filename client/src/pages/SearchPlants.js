@@ -99,13 +99,17 @@ const SearchPlants = () => {
     }
   };
 
-  
+  const capitalizeWords = (str) => {
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
 
   return (
     <>
       <div
         style={{
-         
           display: "flex",
           flexDirection: "column",
         }}
@@ -120,7 +124,7 @@ const SearchPlants = () => {
             padding: "20px",
           }}
         >
-          <h1>Search for your Plant!</h1>
+          <h1>🌵Search for your Plant!🌵</h1>
           <Form
             onSubmit={handleFormSubmit}
             style={{
@@ -140,7 +144,6 @@ const SearchPlants = () => {
                   type="text"
                   size="lg"
                   placeholder="Search for a plant"
-                  
                 />
               </Col>
               <Col xs={12} md={4} className="mb-1">
@@ -156,20 +159,22 @@ const SearchPlants = () => {
       <Container>
         <Row>
 
-          {searchedPlants.map((plant) => {
-            if (
-              plant.watering ===
+          {/* CAMMMERRRRROOOONNNNNN this is what I got working that i think is fine. */}
+           {searchedPlants.map((plant) => {
+             if (
+               plant.watering ===
               "Upgrade Plans To Premium/Supreme - https://perenual.com/subscription-api-pricing. I'm sorry"
+
             ) {
               return (
-                <div className="alert alert-info" role="alert" key={plant.plantId}>
-                  Sorry, not available at this time!
-                </div>
-              );
-            } else {
+                 <div className="alert alert-info" role="alert" key={plant.plantId} md="4">
+                   Sorry, not available at this time!
+                 </div>
+              )
+             } else { 
               return (
-                <Col key={plant.plantId} md="4">
-                  <Card key={plant.plantId} border="dark">
+                <Col key={plant.plantId} md="4" className="d-flex align-items-stretch">
+                  <Card key={plant.plantId} border="dark" className="m-2">
                     {plant.img ? (
                       <Card.Img
                         src={plant.img}
@@ -179,10 +184,10 @@ const SearchPlants = () => {
                     ) : null}
                     <Card.Body>
                       <Card.Title>{plant.scientificName}</Card.Title>
-                      <p className="small">Common Name: {plant.commonName}</p>
-                      <p className="small">Description: {plant.description}</p>
-                      <p className="small">Sunlight: {plant.sunlight}</p>
-                      <p className="small">Watering: {plant.watering}</p>
+
+                      <p className="small">Common Name: {plant.commonName.toUpperCase()}</p>
+                      <p className="small">☀️ : {capitalizeWords(plant.sunlight)}    /    💧: {capitalizeWords(plant.watering)}</p>
+
                       {Auth.loggedIn() && (
                         <Button
                           disabled={savedPlantIds?.some(
@@ -206,6 +211,7 @@ const SearchPlants = () => {
           })}
         </Row>
       </Container>
+	<div style={{minHeight:"40vh"}}></div>
     </>
   );
 };
