@@ -3,13 +3,14 @@ import { Container, Col, Form, Button, Card, Row } from "react-bootstrap";
 
 import Auth from "../utils/auth";
 import { savePlantIds, getSavedPlantIds } from "../utils/localStorage";
-import { useMutation } from "@apollo/client";
+import { setLogVerbosity, useMutation } from "@apollo/client";
 import { SAVE_PLANT } from "../utils/mutations";
 
 const SearchPlants = () => {
   const [searchedPlants, setSearchedPlants] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [savedPlantIds, setSavedPlantIds] = useState(getSavedPlantIds());
+  const [noPlants, setNoPlants] = useState(false);
 
   const [savePlant, { error }] = useMutation(SAVE_PLANT);
 
@@ -38,24 +39,27 @@ const SearchPlants = () => {
       const { data } = await response.json();
       console.log(data, "DATA");
 
-      const filterData = data.filter((plant) => (plant.id < 3000) )
+      const filterData = data.filter((plant) => (plant.id < 3000))
       const plantData = filterData.map((plant) => (
 
-        
-          {
-            plantId: plant.id,
-            commonName: plant.common_name,
-            scientificName: plant.scientific_name[0],
-            watering: plant.watering,
-            sunlight: plant.sunlight[0],
-            img: plant.default_image?.small_url || "",
-            waterFreqName: "",
-            waterFreqValue: "",
-            description: "",
-          }
+
+        {
+          plantId: plant.id,
+          commonName: plant.common_name,
+          scientificName: plant.scientific_name[0],
+          watering: plant.watering,
+          sunlight: plant.sunlight[0],
+          img: plant.default_image?.small_url || "",
+          waterFreqName: "",
+          waterFreqValue: "",
+          description: "",
+        }
       ));
 
       setSearchedPlants(plantData || []);
+      console.log(plantData, "Plant Data")
+      plantData.length === 0 ? setNoPlants(true) : setNoPlants(false); 
+        
       setSearchInput("");
     } catch (err) {
       console.error(err);
@@ -163,12 +167,13 @@ const SearchPlants = () => {
 
       <Container>
         <Row>
-          {(searchedPlants===[])
+          {(noPlants)
             ?
             (
               <div className="alert alert-info" role="alert" md="4">
                 Sorry, not available at this time!
-              </div>)
+              </div>
+              )
             : null
           }
           {/* CAMMMERRRRROOOONNNNNN this is what I got working that i think is fine. */}
