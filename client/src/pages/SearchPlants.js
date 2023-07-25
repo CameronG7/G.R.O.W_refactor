@@ -38,19 +38,24 @@ const SearchPlants = () => {
       const { data } = await response.json();
       console.log(data, "DATA");
 
-      const plantData = data.map((plant) => ({
-        plantId: plant.id,
-        commonName: plant.common_name,
-        scientificName: plant.scientific_name[0],
-        watering: plant.watering,
-        sunlight: plant.sunlight[0],
-        img: plant.default_image?.small_url || "",
-        waterFreqName: "",
-        waterFreqValue: "",
-        description: "",
-      }));
+      const filterData = data.filter((plant) => (plant.id < 3000) )
+      const plantData = filterData.map((plant) => (
 
-      setSearchedPlants(plantData);
+        
+          {
+            plantId: plant.id,
+            commonName: plant.common_name,
+            scientificName: plant.scientific_name[0],
+            watering: plant.watering,
+            sunlight: plant.sunlight[0],
+            img: plant.default_image?.small_url || "",
+            waterFreqName: "",
+            waterFreqValue: "",
+            description: "",
+          }
+      ));
+
+      setSearchedPlants(plantData || []);
       setSearchInput("");
     } catch (err) {
       console.error(err);
@@ -70,10 +75,10 @@ const SearchPlants = () => {
     );
     const newData = await response.json();
 
-	// Adding new data to the plant object
-	plantToSave.waterFreqName = newData.watering_general_benchmark.unit;
-	plantToSave.waterFreqValue = newData.watering_general_benchmark.value;
-	plantToSave.description = newData.description;
+    // Adding new data to the plant object
+    plantToSave.waterFreqName = newData.watering_general_benchmark.unit;
+    plantToSave.waterFreqValue = newData.watering_general_benchmark.value;
+    plantToSave.description = newData.description;
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -82,7 +87,7 @@ const SearchPlants = () => {
       return false;
     }
 
-	console.log(plantToSave, "Plant to Save 2")
+    console.log(plantToSave, "Plant to Save 2")
     try {
       const { data } = await savePlant({
         variables: { input: { ...plantToSave } },
@@ -91,7 +96,7 @@ const SearchPlants = () => {
       if (!data) {
         throw new Error("something went wrong!");
       }
-	  console.log(data, "DATA");
+      console.log(data, "DATA");
 
       setSavedPlantIds([...savedPlantIds, plantId]);
     } catch (err) {
@@ -114,7 +119,7 @@ const SearchPlants = () => {
           flexDirection: "column",
         }}
       >
-         <Container
+        <Container
           id="container"
           style={{
             backgroundColor: "#ad6044",
@@ -131,9 +136,9 @@ const SearchPlants = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "bottom",
-              
+
             }}
-            
+
           >
             <Row>
               <Col xs={12} md={8} className="pt-2">
@@ -147,7 +152,7 @@ const SearchPlants = () => {
                 />
               </Col>
               <Col xs={12} md={4} className="mb-1">
-                <Button  type="submit" variant="success" size="lg">
+                <Button type="submit" variant="success" size="lg">
                   Submit
                 </Button>
               </Col>
@@ -158,20 +163,27 @@ const SearchPlants = () => {
 
       <Container>
         <Row>
-
+          {(searchedPlants===[])
+            ?
+            (
+              <div className="alert alert-info" role="alert" md="4">
+                Sorry, not available at this time!
+              </div>)
+            : null
+          }
           {/* CAMMMERRRRROOOONNNNNN this is what I got working that i think is fine. */}
-           {searchedPlants.map((plant) => {
-             if (
-               plant.watering ===
+          {searchedPlants.map((plant) => {
+            if (
+              plant.watering ===
               "Upgrade Plans To Premium/Supreme - https://perenual.com/subscription-api-pricing. I'm sorry"
 
             ) {
               return (
-                 <div className="alert alert-info" role="alert" key={plant.plantId} md="4">
-                   Sorry, not available at this time!
-                 </div>
+                <div className="alert alert-info" role="alert" key={plant.plantId} md="4">
+                  Sorry, not available at this time!
+                </div>
               )
-             } else { 
+            } else {
               return (
                 <Col key={plant.plantId} md="4" className="d-flex align-items-stretch">
                   <Card key={plant.plantId} border="dark" className="m-2">
@@ -211,7 +223,7 @@ const SearchPlants = () => {
           })}
         </Row>
       </Container>
-	<div style={{minHeight:"40vh"}}></div>
+      <div style={{ minHeight: "40vh" }}></div>
     </>
   );
 };
