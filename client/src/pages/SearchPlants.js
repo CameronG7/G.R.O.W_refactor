@@ -190,8 +190,8 @@ const SearchPlants = () => {
               )
             } else {
               return (
-                <Col key={plant.plantId} md="4" className="d-flex align-items-stretch">
-                  <Card key={plant.plantId} border="dark" className="m-2">
+                <Col key={plant.plantId} md="4" className="d-flex align-items-stretch p-3 ">
+                  <Card key={plant.plantId} border="dark" className="w-75 " style={{ margin: " 0% 0% 2% 4%", justifyContent: "center" }}>
                     {plant.img ? (
                       <Card.Img
                         src={plant.img}
