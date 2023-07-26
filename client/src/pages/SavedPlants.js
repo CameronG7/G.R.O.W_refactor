@@ -216,12 +216,6 @@ const SavedPlants = () => {
           </Row>
         );
       })}
-      <Button
-        id="removeUserBtns"
-        onClick={() => handleDeleteUser(userData._id)}
-      >
-        Delete Profile
-      </Button>
     </>
   );
 };
